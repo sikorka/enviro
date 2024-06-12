@@ -430,18 +430,18 @@ display.text("waiting for sensors", 0, 0, SCREEN_WIDTH, scale=5)
 display.update()
 
 
-def pms5003_read(pms5003):
+def read_sensor(sensor):
     while True:
         try:
-            return pms5003.read()
+            return sensor.read()
         except:
             pass
         
 
 for _ in range(2):
     # the gas sensor gives a few weird readings to start, lets discard them
-    temperature, pressure, humidity, gas, status, _, _ = bme.read()
-    pms5003_read(pms5003)
+    temperature, pressure, humidity, gas, status, _, _ = read_sensor(bme)
+    read_sensor(pms5003)
     time.sleep(0.5)
 
 #prep sensor readings file to write to it
@@ -477,7 +477,7 @@ while True:
         mic_average_result = average(mic_results)
 
         # read BME688
-        temperature, pressure, humidity, gas, status, _, _ = bme.read()
+        temperature, pressure, humidity, gas, status, _, _ = read_sensor(bme)
         heater = "Stable" if status & STATUS_HEATER_STABLE else "Unstable"
 
         # correct temperature and humidity using an offset

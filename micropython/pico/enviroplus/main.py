@@ -75,6 +75,9 @@ mode = "sensors"
 
 PM_PX_SIZE = 2 # change to 2 for narrower but bolder graph
 
+pms_exception_caught_times = 0
+bme_exception_caught_times = 0
+
 
 def screen_on():
     display.set_backlight(BRIGHTNESS)
@@ -133,20 +136,22 @@ def print_to_shell():
     print(f"hPa {pressure_hpa:.0f}")
     print(f"lux {lux:.0f}")
     print(f"mic {mic_average_result:.1f}")
-    print(f".   {data.pm_ug_per_m3(1.0):.0f}")
-    print(f"o   {data.pm_ug_per_m3(2.5):.0f}")
-    print(f"()  {data.pm_ug_per_m3(10):.0f}")
+    print(f"pm1   {data.pm_ug_per_m3(1.0):.0f}")
+    print(f"pm2.5 {data.pm_ug_per_m3(2.5):.0f}")
+    print(f"pm10  {data.pm_ug_per_m3(10):.0f}")
     print(f"gas {gas:.0f}\n")
-
+    print("\n")
+    print(f"BME sensor exceptions {bme_exception_caught_times}\n")
+    print(f"PMS sensor exceptions {pms_exception_caught_times}\n")
 
 def save_header_to_file():
-    data_file = open("sensors.txt", "a")
+    data_file = open(FILE_NAME, "a")
     data_file.write(f"{COLUMN_NAMES}\n")
     data_file.close()
 
 
 def save_reading_to_file():
-    data_file = open("sensors.txt", "a")
+    data_file = open(FILE_NAME, "a")
     data_file.write(f"{sensor_reading_date_time};")
     data_file.write(f"{corrected_temperature:.1f};")
     data_file.write(f"{corrected_humidity:.0f};")
@@ -178,7 +183,7 @@ def read_mic():
 
 def take_mic_sample(frequency, length=240):
     results = []
-    for index in range(length):
+    for _ in range(length):
         results.append(rescale_mic_result(read_mic()))
         time.sleep(1 / frequency)
 
@@ -430,18 +435,28 @@ display.text("waiting for sensors", 0, 0, SCREEN_WIDTH, scale=5)
 display.update()
 
 
-def read_sensor(sensor):
+def read_sensor_pms(sensor):
     while True:
         try:
             return sensor.read()
         except:
+            pms_exception_caught_times += 1
             pass
-        
+
+
+def read_sensor_bme(sensor):
+    while True:
+        try:
+            return sensor.read()
+        except:
+            bme_exception_caught_times += 1
+            pass
+
 
 for _ in range(2):
     # the gas sensor gives a few weird readings to start, lets discard them
-    temperature, pressure, humidity, gas, status, _, _ = read_sensor(bme)
-    read_sensor(pms5003)
+    temperature, pressure, humidity, gas, status, _, _ = read_sensor_bme(bme)
+    read_sensor_pms(pms5003)
     time.sleep(0.5)
 
 #prep sensor readings file to write to it
@@ -477,7 +492,7 @@ while True:
         mic_average_result = average(mic_results)
 
         # read BME688
-        temperature, pressure, humidity, gas, status, _, _ = read_sensor(bme)
+        temperature, pressure, humidity, gas, status, _, _ = read_sensor_bme(bme)
         heater = "Stable" if status & STATUS_HEATER_STABLE else "Unstable"
 
         # correct temperature and humidity using an offset
@@ -510,7 +525,7 @@ while True:
 
         # read particulate sensor and put the results into an array
         # comment out if no PM sensor
-        data = read_sensor(pms5003)
+        data = read_sensor_pms(pms5003)
         results_particulates.append(data)
         if (len(results_particulates) > SCREEN_WIDTH / PM_PX_SIZE):  # scroll the result list by removing the first value
             results_particulates.pop(0)
@@ -584,3 +599,4 @@ while True:
 
             # wait for next reading
             sleep_until_next_reading()
+

@@ -11,7 +11,7 @@ from pms5003 import PMS5003
 
 # sensors reading frequency in seconds
 # value > 0s, for example 10, 2 or 0.5
-SENSORS_READING_FREQUENCY = 5
+SENSORS_READING_FREQUENCY = 10
 
 # 1 is the brightest and energy consuming
 # 0.5 is not very visible during a bright day
@@ -436,20 +436,26 @@ display.update()
 
 
 def read_sensor_pms(sensor):
+    global pms_exception_caught_times
+
     while True:
         try:
             return sensor.read()
         except:
             pms_exception_caught_times += 1
+            time.sleep(0.5)
             pass
 
 
 def read_sensor_bme(sensor):
+    global bme_exception_caught_times
+
     while True:
         try:
             return sensor.read()
         except:
             bme_exception_caught_times += 1
+            time.sleep(0.5)
             pass
 
 
@@ -606,3 +612,5 @@ while True:
 
             # wait for next reading
             sleep_until_next_reading()
+
+

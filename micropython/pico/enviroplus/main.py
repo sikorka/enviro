@@ -510,7 +510,7 @@ while True:
 
         # read particulate sensor and put the results into an array
         # comment out if no PM sensor
-        data = pms5003_read(pms5003)
+        data = read_sensor(pms5003)
         results_particulates.append(data)
         if (len(results_particulates) > SCREEN_WIDTH / PM_PX_SIZE):  # scroll the result list by removing the first value
             results_particulates.pop(0)

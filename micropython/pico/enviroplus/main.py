@@ -429,18 +429,22 @@ display.set_pen(YELLOW)
 display.text("waiting for sensors", 0, 0, SCREEN_WIDTH, scale=5)
 display.update()
 
-# the gas sensor gives a few weird readings to start, lets discard them
-temperature, pressure, humidity, gas, status, _, _ = bme.read()
-pms5003.read()
-time.sleep(0.5)
-temperature, pressure, humidity, gas, status, _, _ = bme.read()
-pms5003.read()
-time.sleep(0.5)
+
+def pms5003_read(pms5003):
+    try:
+        return pms5003.read()
+    except:
+        pass
+        
+
+for _ in range(2):
+    # the gas sensor gives a few weird readings to start, lets discard them
+    temperature, pressure, humidity, gas, status, _, _ = bme.read()
+    pms5003_read(pms5003)
+    time.sleep(0.5)
 
 #prep sensor readings file to write to it
 save_header_to_file()
-
-
 
 
 while True:
@@ -453,7 +457,6 @@ while True:
         screen_mode = SCREEN_MODE_SAVING
     elif button_y.is_pressed:
         screen_mode = SCREEN_MODE_OFF
-
 
     if screen_mode == SCREEN_MODE_SAVING or screen_mode == SCREEN_MODE_ON:
         screen_on()
@@ -506,7 +509,7 @@ while True:
 
         # read particulate sensor and put the results into an array
         # comment out if no PM sensor
-        data = pms5003.read()
+        data = pms5003_read(pms5003)
         results_particulates.append(data)
         if (len(results_particulates) > SCREEN_WIDTH / PM_PX_SIZE):  # scroll the result list by removing the first value
             results_particulates.pop(0)

@@ -32,7 +32,8 @@ Saves each sensor data read, to file on Pico:
 One line takes 55 bytes on average - more if more pollution - and it can
 save up to 4 days of data to Pico (theoretically), if read - as set by 
 default - every 10 seconds. Then you need to remove the data from Pico, 
-save it elsewhere, cause Pico has only 2MB memory.
+save it elsewhere, cause Pico has only 2MB memory. In practice better to 
+do this every 24h. 
 
 
 SETUP:

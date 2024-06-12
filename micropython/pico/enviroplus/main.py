@@ -11,7 +11,7 @@ from pms5003 import PMS5003
 
 # sensors reading frequency in seconds
 # value > 0s, for example 10, 2 or 0.5
-SENSORS_READING_FREQUENCY = 10
+SENSORS_READING_FREQUENCY = 5
 
 # 1 is the brightest and energy consuming
 # 0.5 is not very visible during a bright day
@@ -576,14 +576,21 @@ while True:
 
             pressure_describe=describe_pressure(pressure_hpa)
             display.set_pen(pressure_color)
-            display.text(f"{pressure_describe}", 100, 		100, SCREEN_WIDTH, scale=2)
+            display.text(f"{pressure_describe}", 100, 	100, SCREEN_WIDTH, scale=2)
 
             lux_describe = describe_light(lux)
             display.set_pen(lux_color)
-            display.text(f"{lux_describe}", 100, 					125, SCREEN_WIDTH, scale=2)
+            display.text(f"{lux_describe}", 100, 		125, SCREEN_WIDTH, scale=2)
 
             display.set_pen(mic_color)
-            display.text(f"mic: {mic_average_result:.1f}", 100, 	175, SCREEN_WIDTH, scale=2)
+            display.text(f"mic: {mic_average_result:.1f}", 100, 	155, SCREEN_WIDTH, scale=2)
+
+            if bme_exception_caught_times <= 0 or pms_exception_caught_times <= 0:
+                display.set_pen(WHITE)
+            else:
+                display.set_pen(RED)
+
+            display.text(f"exc b/p: {bme_exception_caught_times}/{pms_exception_caught_times}", 100, 	175, SCREEN_WIDTH, scale=2)
 
             # print to shell
             print_to_shell()
@@ -599,4 +606,3 @@ while True:
 
             # wait for next reading
             sleep_until_next_reading()
-

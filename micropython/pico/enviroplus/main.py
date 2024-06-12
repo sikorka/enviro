@@ -431,10 +431,11 @@ display.update()
 
 
 def pms5003_read(pms5003):
-    try:
-        return pms5003.read()
-    except:
-        pass
+    while True:
+        try:
+            return pms5003.read()
+        except:
+            pass
         
 
 for _ in range(2):

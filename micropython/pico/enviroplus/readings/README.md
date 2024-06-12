@@ -1,0 +1,1 @@
+Example readings. The most Pico is able to save is 809KB it seems. 

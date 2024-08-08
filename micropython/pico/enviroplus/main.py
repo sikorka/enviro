@@ -437,7 +437,7 @@ display.update()
 
 def read_sensor_pms(sensor):
     global pms_exception_caught_times
-
+    
     while True:
         try:
             return sensor.read()
@@ -449,7 +449,7 @@ def read_sensor_pms(sensor):
 
 def read_sensor_bme(sensor):
     global bme_exception_caught_times
-
+    
     while True:
         try:
             return sensor.read()
@@ -469,6 +469,8 @@ for _ in range(2):
 save_header_to_file()
 
 
+
+# every SENSORS_READING_FREQUENCY seconds make a reading
 while True:
 
     # turn on the backlight with A and turn it back off with B
@@ -573,7 +575,7 @@ while True:
             display.set_pen(PM25_COLOR)
             display.text(f"pm2.5 {data.pm_ug_per_m3(2.5):.0f}", 0, 175, SCREEN_WIDTH, scale=2)
             display.set_pen(PM10_COLOR)
-            display.text(f"pm10  {data.pm_ug_per_m3(10):.0f}", 0, 	200, SCREEN_WIDTH, scale=2)
+            display.text(f"pm10  {data.pm_ug_per_m3(10):.0f}",  0, 200, SCREEN_WIDTH, scale=2)
 
             # draw the second column of text
             humidity_describe = describe_humidity(corrected_humidity)

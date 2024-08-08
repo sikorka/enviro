@@ -8,7 +8,7 @@ Gas I didn't figure out yet. It does not read (it seems) when harsh
 chemicals are felt in the air. Maybe it is not VOC gas. 
 
 Currently, it saves data to `sensors.txt` file. Samples in 
-[/readings](./readings) folder. 
+[/readings](../doc/readings) folder. 
 
 ----
 
@@ -16,17 +16,17 @@ Below in the graph and chart you can see that from a safe level (low/green), smo
 
 This is what it shows on screen: 
 
-![cigarette smoke](./doc/cigarette%20smoke.jpeg)
+![cigarette smoke](../doc/cigarette%20smoke.jpeg)
 
 This is the sensor data saved to CSV file (colored): 
 
-![cigarette smoke data](./doc/quick%20smoke.jpg)
+![cigarette smoke data](../doc/quick%20smoke.jpg)
 
 
 
 Setup
 -----
-Read contents of [main.py](./main.py) for setup and explanations. 
+Read contents of [main.py](main.py) for setup and explanations. 
 
 
 Current issues

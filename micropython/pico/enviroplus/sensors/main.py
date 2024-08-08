@@ -47,6 +47,11 @@ Remember to save PMS5003 library code from
 https://github.com/pimoroni/pms5003-micropython/blob/main/pms5003/__init__.py
 as `pms5003.py` on your Pico. 
 
+RUN: 
+
+After setup, save this file on Pico as `main.py`. Disconnect Pico from power and connect it again. 
+Now the program will be running and restarting everytime when Pico restarts. You are done! 
+
 """
 
 #where to save sensor data

@@ -176,7 +176,6 @@ def serve():
     
     #Start a web server
     state = 'OFF'
-    # pico_led.off()
     temperature = 0
     
     while True:        
@@ -213,8 +212,6 @@ def serve():
         client.close()
         
         time.sleep(1)
-
-
 
 ################################
 

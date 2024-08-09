@@ -20,7 +20,7 @@ BRIGHTNESS = 0.8
 
 """
 This example reads from all the sensors on Enviro+ and the PMS5003
-particualte sensor and mic. Displays the results on screen.
+particulate sensor and mic. Displays the results on screen. Saves them to file.
 
 Press B to turn the backlight off.
 Press A to turn the backlight on for 2s every reading.
@@ -29,11 +29,12 @@ Press Y to have the screen always on (battery draining).
 Saves each sensor data read, to file on Pico:
 24.05.29 14:02:53;55;999;12;10.5;9;13;13;12345; 
 
-One line takes 55 bytes on average - more if more pollution - and it can
-save up to 4 days of data to Pico (theoretically), if read - as set by 
-default - every 10 seconds. Then you need to remove the data from Pico, 
-save it elsewhere, cause Pico has only 2MB memory. In practice better to 
-do this every 24h. 
+One line takes 55 bytes on average - more if more pollution. It could
+save up to 4 days of data to Pico in theory, if read - as set by 
+default - every 10 seconds. But in practice it only works for 1.5 days. 
+After that time you need to remove sensor data from Pico and save it 
+elsewhere. Pico has only 2MB memory (new Pico 2 has 4MB) but it saves 
+max 809KB data. So in practice save your data every 24h. 
 
 
 SETUP:
@@ -41,11 +42,16 @@ SETUP:
 Go through this https://learn.pimoroni.com/article/getting-started-with-pico#installing-the-custom-firmware 
 
 On the Releases page > under Assets, choose a stable *.uf2 file with 
-*enviro* in the name. Mine is `pimoroni-enviro-v1.22.2-micropython.uf2`. 
+*enviro* in the name. Mine is `enviro-v1.23.0-1-pimoroni-micropython.uf2`. 
 
 Remember to save PMS5003 library code from
 https://github.com/pimoroni/pms5003-micropython/blob/main/pms5003/__init__.py
 as `pms5003.py` on your Pico. 
+
+RUN: 
+
+After setup, save this file on Pico as `main.py`. Disconnect Pico from power and connect it again. 
+Now the program will be running and restarting smoothly everytime Pico restarts. You are done! 
 
 """
 

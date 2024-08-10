@@ -18,6 +18,6 @@ int main(int argc, char const *argv[])
         printf(buff);
         sleep_ms(1000);
     }
-    
+
     return 0;
 }

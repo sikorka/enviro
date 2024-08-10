@@ -12,7 +12,12 @@ int main(int argc, char const *argv[])
     pico_get_unique_board_id_string((char *)buff, len);
 
     printf("Printing Pico serial number: ");
-    printf(buff);
-
+    
+    while (true)
+    {
+        printf(buff);
+        sleep_ms(1000);
+    }
+    
     return 0;
 }

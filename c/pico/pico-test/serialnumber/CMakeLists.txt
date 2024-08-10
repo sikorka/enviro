@@ -87,7 +87,7 @@ pico_sdk_init()
 
 # Enable USB, UART output
 pico_enable_stdio_usb(pico-test 1)
-pico_enable_stdio_uart(pico-test 1)
+#pico_enable_stdio_uart(pico-test 1)
 
 # Enable extra outputs (SWD?)
 pico_add_extra_outputs(pico-test)

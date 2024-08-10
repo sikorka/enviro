@@ -6,7 +6,10 @@ int main(int argc, char const *argv[])
 {
     stdio_init_all();
 
-    printf("Hello World");
+    while (true)
+    {
+        printf("Hello World");
+    }
 
     return 0;
 }

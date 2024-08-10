@@ -9,6 +9,7 @@ int main(int argc, char const *argv[])
     while (true)
     {
         printf("Hello World");
+        sleep_ms(1000);
     }
 
     return 0;

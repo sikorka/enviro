@@ -233,7 +233,7 @@ def send_reading_to_sensor_community():
 
     bme_values = {}
     bme_values["temperature"] = f"{corrected_temperature:.1f}"
-    bme_values["pressure"] = f"{pressure_hpa:.0f}"
+    bme_values["pressure"] = f"{pressure_hpa*100:.0f}" # pressure in Pa (not hPa) in sensor.community
     bme_values["humidity"] = f"{corrected_humidity:.0f}"
 
     bme_values_json = [{"value_type": key, "value": val} for key, val in bme_values.items()]

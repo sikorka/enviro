@@ -140,10 +140,6 @@ def connect_to_wifi():
 
         time.sleep(3)
 
-        # these 3 lines need to be repeated
-        # with hidden WIFI it will not connect by using connect() alone
-        #wlan = network.WLAN(network.STA_IF)
-        #wlan.active(True)
         wlan.connect(secrets.SSID, secrets.PASSWORD)
 
     print_wifi_status()
@@ -560,7 +556,7 @@ MIC_SAMPLE_N = 240
 FILE_NAME = "sensors.txt"
 COLUMN_NAMES = "date;time;temp °C;humidity %;pressure hPA;lux;average mic;pm1;pm2.5;pm10;gas;"
 
-# Raspberry Pi ID to send to Sensor.Community
+# Raspberry Pi Pico ID to send to Sensor.Community
 SENSOR_COMMUNITY_ID = "raspi-" + get_serial_number()
 
 

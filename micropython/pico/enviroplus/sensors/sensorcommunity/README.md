@@ -17,7 +17,7 @@ reaches safe level again.
 
 This is what it shows on screen:
 
-![cigarette smoke](../doc/cigarette%20smoke.jpeg)
+![cigarette smoke](../../doc/cigarette%20smoke.jpeg)
 
 
 Setup

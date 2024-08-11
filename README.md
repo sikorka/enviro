@@ -1,4 +1,4 @@
-This project intends to set up equipement to read gas data (like spray paints)
+This project intends to set up equipment to read gas data (like spray paints)
 and particulates PM1, PM2.5, PM10 (smoke, dust, mold particles) outdoor, under 
 a roofed area. 
 

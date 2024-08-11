@@ -136,14 +136,14 @@ def connect_to_wifi():
         print(wlan.isconnected())
         print(wlan.ifconfig())
 
-        display_fullscreen(f"{describe_wifi_status()}\n", 3);
+        display_fullscreen("{}\n{}\n{}\n".format(describe_wifi_status(), wlan.isconnected(), wlan.ifconfig()), 3);
 
-        time.sleep(2)
+        time.sleep(3)
 
         # these 3 lines need to be repeated
-        # otherwise with hidden WIFI it will not connect by using connect() alone
-        wlan = network.WLAN(network.STA_IF)
-        wlan.active(True)
+        # with hidden WIFI it will not connect by using connect() alone
+        #wlan = network.WLAN(network.STA_IF)
+        #wlan.active(True)
         wlan.connect(secrets.SSID, secrets.PASSWORD)
 
     print_wifi_status()
@@ -154,13 +154,15 @@ def disconnect_from_wifi():
 
         display_fullscreen(f"{describe_wifi_status()}\n", 3);
 
-        time.sleep(2)
+        time.sleep(1)
         wlan.disconnect()
 
     print_wifi_status()
 
 
 def display_fullscreen(string, size):
+    display.set_pen(BLACK)
+    display.clear()
     display.set_pen(YELLOW)
     display.text(string, 0, 0, SCREEN_WIDTH, scale=size)
     display.update()
@@ -192,7 +194,7 @@ def get_serial_number():
     return secrets.PICO_SERIAL_NUMBER
 
 def send_reading_to_sensor_community():
-    
+
     id = SENSOR_COMMUNITY_ID
 
     pm_values = {}
@@ -200,9 +202,9 @@ def send_reading_to_sensor_community():
     pm_values["P1"] = f"{data.pm_ug_per_m3(10):.0f}"
 
     pm_values_json = [{"value_type": key, "value": val} for key, val in pm_values.items()]
-    
+
     resppm = None
-    
+
     url = "https://api.sensor.community/v1/push-sensor-data/"
     payload={
         "software_version": "enviro-plus 1.0.0",
@@ -219,12 +221,12 @@ def send_reading_to_sensor_community():
         print("Request:")
         print(payload)
         print(headers)
-        
+
         resppm = requests.post(url,
-            data=(json.dumps(payload)).encode(),
-            headers=headers
-        )
-        
+                               data=(json.dumps(payload)).encode(),
+                               headers=headers
+                               )
+
         print_response(resppm)
     except Exception as e:
         print("Error here...................................................................")
@@ -237,11 +239,11 @@ def send_reading_to_sensor_community():
     bme_values["temperature"] = f"{corrected_temperature:.1f}"
     bme_values["pressure"] = f"{pressure_hpa:.0f}"
     bme_values["humidity"] = f"{corrected_humidity:.0f}"
-    
+
     bme_values_json = [{"value_type": key, "value": val} for key, val in bme_values.items()]
-    
+
     respbm = None
-    
+
     payload={
         "software_version": "enviro-plus 1.0.0",
         "sensordatavalues": bme_values_json
@@ -256,12 +258,12 @@ def send_reading_to_sensor_community():
         print("Request:")
         print(payload)
         print(headers)
-            
+
         respbm = requests.post(url,
-            data=(json.dumps(payload)).encode(),
-            headers=headers
-        )
-        
+                               data=(json.dumps(payload)).encode(),
+                               headers=headers
+                               )
+
         print_response(respbm)
     except Exception as e:
         print("Error here...................................................................")
@@ -269,8 +271,8 @@ def send_reading_to_sensor_community():
         print_wifi_status()
         pass
 
-    
-        
+
+
     #         if resp_pm.ok and resp_bmp.ok:
     #             return True
     #         else:
@@ -825,12 +827,13 @@ while True:
 
         # send results to sensor.community
         send_reading_to_sensor_community()
-        
+
         # save to file - not needed when sending to sensor.community
         # save_reading_to_file()
 
         # wait for next reading
         sleep_until_next_reading()
+
 
 
 

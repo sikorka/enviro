@@ -133,10 +133,12 @@ def connect_to_wifi():
 
     while wlan.isconnected() == False:
         print('Waiting for connection...')
+        print(wlan.isconnected())
+        print(wlan.ifconfig())
 
         display_fullscreen(f"{describe_wifi_status()}\n", 3);
 
-        time.sleep(1)
+        time.sleep(2)
 
         # these 3 lines need to be repeated
         # otherwise with hidden WIFI it will not connect by using connect() alone
@@ -152,7 +154,7 @@ def disconnect_from_wifi():
 
         display_fullscreen(f"{describe_wifi_status()}\n", 3);
 
-        time.sleep(1)
+        time.sleep(2)
         wlan.disconnect()
 
     print_wifi_status()

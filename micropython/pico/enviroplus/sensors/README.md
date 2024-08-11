@@ -1,3 +1,3 @@
-Check out how to save sensor data from Pico / Enviro+ / PMS5003 combo, into:
-- [a local Pico file](./savetofile/README.md), or 
-- [send them off to internet](./sensorcommunity/README.md). 
+To save sensor data to file check out [this](./savetofile/README.md). 
+
+To send sensor data off to internet check out [this](./sensorcommunity/README.md). 

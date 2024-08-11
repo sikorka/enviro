@@ -7,7 +7,7 @@ It works great for reading **PM** data. It also reads **temp in Celsius** (very 
 Gas I didn't figure out yet. It does not read (it seems) when harsh
 chemicals are felt in the air. Maybe it is not VOC gas.
 
-To save data locally, without wifi, read [sensors data saving](../sensorsave/README.md).
+To save data locally, without wifi, read [sensors data saving](../savetofile/README.md).
 
 ----
 
@@ -23,6 +23,3 @@ This is what it shows on screen:
 Setup
 -----
 Read contents of [main.py](main.py) for setup and explanations.
-
-
-

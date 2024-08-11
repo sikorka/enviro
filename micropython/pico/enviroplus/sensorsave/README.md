@@ -1,11 +1,14 @@
-This code is for equipment combo: Pico / Enviro+ / PMS5003. 
+This code is for equipment combo Pico / Enviro+ / PMS5003, and it 
+saves data locally on Pico.
 
-It works great for reading and saving locally **PM** data. It also reads **temp in Celsius** (very well), **light**, **humidity** (very well), **noise** (not so well), **pressure** (very well). 
+It works great for reading and saving locally **PM** data. It also 
+reads **temp in Celsius** (very well), **light**, **humidity** (very 
+well), **noise** (not so well), **pressure** (very well). 
 
 Gas I didn't figure out yet. It does not read (it seems) when harsh 
 chemicals are felt in the air. Maybe it is not VOC gas. 
 
-It saves data to `sensors.txt` file. Samples in [/readings](../doc/readings) folder. 
+Data is saved to `sensors.txt` file on Pico. Samples in [/readings](../doc/readings) folder. 
 
 To send data wirelessly check out [/sensorcommunity](../sensorcommunity/README.md). 
 

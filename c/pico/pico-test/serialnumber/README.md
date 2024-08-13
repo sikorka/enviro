@@ -2,7 +2,10 @@ In order to register a device in [sensor.community](https://sensor.community/en/
 
 This code is displaying Pico's serial number. 
 
-But you don't really need it! It is enough to run a simple [hello world](../hello/source.c) in VS code > **Run** in bottom right corner: you will see the serial number displayed in VS Code Terminal when it flashes it onto Pico.
+Other ways
+----------
+
+To get Pico serial number, it is also enough to run a simple [hello world](../hello/source.c) in VS code > **Run** in bottom right corner: you will see the serial number displayed in VS Code Terminal when it flashes it onto Pico. 
 
 ![pico flashing in VS Code](doc/serial%20number%20in%20VS%20Code%20when%20flashing.png)
 
@@ -23,7 +26,6 @@ Before I connected the second USB, that works better with Pico, I was getting on
     $ sudo ls -la /dev/cu.*
     crw-rw-rw-  1 root  wheel  0x16000001  2 Aug 15:45 /dev/cu.BLTH
 
-This must be my hub, that does not work well with Pico, for some reason. 
 
 After changing the USB connection I was able to run the code on Pico, as seen in Thonny: 
 

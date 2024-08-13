@@ -1,12 +1,17 @@
 This code is for equipment combo Pico / Enviro+ / PMS5003, and it 
 saves data locally on Pico.
 
-It works great for reading and saving locally **PM** data. It also 
-reads **temp in Celsius** (very well), **light**, **humidity** (very 
-well), **noise** (not so well), **pressure** (very well). 
+It reads:
+- **PM** data (very well),
+- **temp in Celsius** (very well),
+- **light** (very well),
+- **humidity** (very well),
+- **noise** (not so well),
+- **pressure** (very well),
+- **gas** (not sure).
 
-Gas I didn't figure out yet. It does not read (it seems) when harsh 
-chemicals are felt in the air. Maybe it is not VOC gas. 
+Gas sensor I didn't figure out yet what it reads. It does not read (it seems) when harsh
+chemicals are felt in the air. Maybe it is not VOC gas.
 
 Data is saved to `sensors.txt` file on Pico. Samples in [/readings](../../doc/readings) folder. 
 
@@ -39,9 +44,12 @@ Current issues
   when plugged into a computer (Mac in my case) - it is very difficult to add high temp-resistant RTC clock to Pico 
 - *minor*: Pico restarts (when on battery) few times per day (successfully) 
 
+All of these issues are gone when [sending data wirelessly](../sensorcommunity/README.md). 
 
 TODO
 ----
 
 - How to add SD card to save more data? 
 - How to add time component that works in high outdoor temps? 
+
+All of these TODOs are solved when [sending data wirelessly](../sensorcommunity/README.md). 

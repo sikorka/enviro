@@ -95,8 +95,8 @@ def draw_gas_bar(gas, min_gas, max_gas):
 
 
 def sleep_until_next_reading():
-    if screen_mode == SCREEN_MODE_SAVING and SENSORS_READING_FREQUENCY >= 2:
-        print("turning off screen to save battery")
+    if screen_mode == SCREEN_MODE_SAVE_POWER and SENSORS_READING_FREQUENCY >= 2:
+        print("turning off screen to save battery\n")
         time.sleep(2) # show the results for a moment if saving mode turned on
         screen_off() # turn off screen to save battery
         time.sleep(SENSORS_READING_FREQUENCY-2) # wait the remaining seconds
@@ -112,11 +112,11 @@ def establish_screen_mode():
     if button_a.is_pressed:
         screen_mode = SCREEN_MODE_ON
     elif button_b.is_pressed:
-        screen_mode = SCREEN_MODE_SAVING
+        screen_mode = SCREEN_MODE_SAVE_POWER
     elif button_y.is_pressed:
         screen_mode = SCREEN_MODE_OFF
 
-    if screen_mode == SCREEN_MODE_SAVING or screen_mode == SCREEN_MODE_ON:
+    if screen_mode == SCREEN_MODE_SAVE_POWER or screen_mode == SCREEN_MODE_ON:
         screen_on()
         time.sleep(0.2)
     elif screen_mode == SCREEN_MODE_OFF:
@@ -138,6 +138,7 @@ def connect_to_wifi():
 
         display_fullscreen("{}\n{}\n{}\n".format(describe_wifi_status(), wlan.isconnected(), wlan.ifconfig()), 3);
 
+        # retry every few seconds
         time.sleep(3)
 
         wlan.connect(secrets.SSID, secrets.PASSWORD)
@@ -150,12 +151,15 @@ def disconnect_from_wifi():
 
         display_fullscreen(f"{describe_wifi_status()}\n", 3);
 
+        # retry every few seconds
         time.sleep(1)
+        
         wlan.disconnect()
 
     print_wifi_status()
 
 
+# display text in full screen mode on Pico 
 def display_fullscreen(string, size):
     display.set_pen(BLACK)
     display.clear()
@@ -218,15 +222,14 @@ def send_reading_to_sensor_community():
         print(payload)
         print(headers)
 
-        resppm = requests.post(url,
-                               data=(json.dumps(payload)).encode(),
-                               headers=headers
-                               )
+        resppm = requests.post(url, data=(json.dumps(payload)).encode(), headers=headers)
 
         print_response(resppm)
     except Exception as e:
-        print("Error here...................................................................")
-        print(e)
+        # occasionally the data is not successfully sent - it is expected
+        # in such case this will be shown:
+        print("...................................................................")
+        print("Exception:")
         print_wifi_status()
         pass
 
@@ -255,27 +258,18 @@ def send_reading_to_sensor_community():
         print(payload)
         print(headers)
 
-        respbm = requests.post(url,
-                               data=(json.dumps(payload)).encode(),
-                               headers=headers
-                               )
+        respbm = requests.post(url, data=(json.dumps(payload)).encode(), headers=headers)
 
         print_response(respbm)
     except Exception as e:
-        print("Error here...................................................................")
+        # occasionally the data is not successfully sent - it is expected
+        # in such case this will be shown:
+        print("...................................................................")
+        print("Exception:")
         print(e)
         print_wifi_status()
         pass
 
-
-
-    #         if resp_pm.ok and resp_bmp.ok:
-    #             return True
-    #         else:
-    #             print(f"Sensor.Community Error. PM: {resp_pm.reason}, Climate: {resp_bmp.reason}")
-    #             return False
-#     else:
-#         return False
 
 
 def print_response(res):
@@ -289,46 +283,52 @@ def print_response(res):
         print("Response is None")
 
 def print_reading():
+    print("\n")
     print(f"{sensor_reading_date_time}")
-    print(f"tem {corrected_temperature:.1f} °C")
-    print(f"hum {corrected_humidity:.0f}")
-    print(f"hPa {pressure_hpa:.0f}")
-    print(f"lux {lux:.0f}")
-    print(f"mic {mic_average_result:.1f}")
+    print(f"temp  {corrected_temperature:.1f} °C")
+    print(f"humid {corrected_humidity:.0f}")
+    print(f"hPa   {pressure_hpa:.0f}")
+    print(f"lux   {lux:.0f}")
+    print(f"mic   {mic_average_result:.1f}")
     print(f"pm1   {data.pm_ug_per_m3(1.0):.0f}")
     print(f"pm2.5 {data.pm_ug_per_m3(2.5):.0f}")
     print(f"pm10  {data.pm_ug_per_m3(10):.0f}")
-    print(f"gas {gas:.0f}\n")
+    print(f"gas   {gas:.0f}")
     print("\n")
-    print(f"BME sensor exceptions {bme_exception_caught_times}\n")
-    print(f"PMS sensor exceptions {pms_exception_caught_times}\n")
+    print(f"BME sensor exceptions {bme_exception_caught_times}")
+    print(f"PMS sensor exceptions {pms_exception_caught_times}")
+    print("\n")
 
 def save_header_to_file():
-    data_file = open(FILE_NAME, "a")
-    data_file.write(f"{COLUMN_NAMES}\n")
-    data_file.close()
+    if (SAVE_READINGS_TO_FILE):
+        data_file = open(FILE_NAME, "a")
+        data_file.write(f"{COLUMN_NAMES}\n")
+        data_file.close()
+
+        print(f"Will save readings to file {FILE_NAME} on Pico from now on.\n")
+    else:
+        print(f"Will not save readings to file {FILE_NAME} on Pico.\n")
 
 def save_reading_to_file():
-    data_file = open(FILE_NAME, "a")
-    data_file.write(f"{sensor_reading_date_time};")
-    data_file.write(f"{corrected_temperature:.1f};")
-    data_file.write(f"{corrected_humidity:.0f};")
-    data_file.write(f"{pressure_hpa:.0f};", )
-    data_file.write(f"{lux:.0f};")
-    data_file.write(f"{mic_average_result:.1f};")
-    data_file.write(f"{data.pm_ug_per_m3(1.0):.0f};")
-    data_file.write(f"{data.pm_ug_per_m3(2.5):.0f};")
-    data_file.write(f"{data.pm_ug_per_m3(10):.0f};")
-    data_file.write(f"{gas:.0f};\n")
-    data_file.close()
+    if (SAVE_READINGS_TO_FILE):
+        data_file = open(FILE_NAME, "a")
+        data_file.write(f"{sensor_reading_date_time};")
+        data_file.write(f"{corrected_temperature:.1f};")
+        data_file.write(f"{corrected_humidity:.0f};")
+        data_file.write(f"{pressure_hpa:.0f};", )
+        data_file.write(f"{lux:.0f};")
+        data_file.write(f"{mic_average_result:.1f};")
+        data_file.write(f"{data.pm_ug_per_m3(1.0):.0f};")
+        data_file.write(f"{data.pm_ug_per_m3(2.5):.0f};")
+        data_file.write(f"{data.pm_ug_per_m3(10):.0f};")
+        data_file.write(f"{gas:.0f};\n")
+        data_file.close()
 
-    print(f"saved to file {FILE_NAME} on Pico\n")
+        print(f"saved to file {FILE_NAME} on Pico\n")
 
 
 def get_date_time_now():
     now = time.localtime()
-    #         sensor_reading_time_start = time.asctime(now) # does not work
-    #         sensor_reading_time_start = now.tm_year ":" now.tm_mon # does not work
     sensor_reading_date_time = "{:2d}.{:02d}.{:02d};{:02d}:{:02d}:{:02d}".format(
         now[0]-2000, now[1], now[2], now[3], now[4], now[5]) # -2000y cause less bytes
 
@@ -367,7 +367,8 @@ def adjust_to_sea_pressure(pressure_hpa, temperature, altitude):
     adjusted_hpa = pressure_hpa + ((pressure_hpa * 9.80665 * altitude) / (287 * (273 + temperature + (altitude / 400))))
     return adjusted_hpa
 
-
+# it's hard to see colors, like blue or red, on the screen
+# in order to have good visibility, skipping them for now
 def describe_pressure(pressure):
     global pressure_color
 
@@ -391,6 +392,8 @@ def describe_pressure(pressure):
     return description
 
 
+# it's hard to see colors, like blue or red, on the screen
+# in order to have good visibility, skipping them for now
 def describe_humidity(humidity):
     """Convert relative humidity into good/bad description and set color."""
     global humidity_color
@@ -412,6 +415,8 @@ def describe_humidity(humidity):
     return description
 
 
+# it's hard to see colors, like blue or red, on the screen
+# in order to have good visibility, skipping them for now
 def describe_light(lux):
     """Convert light level in lux to descriptive value and set color."""
     global lux_color
@@ -500,6 +505,8 @@ def read_sensor_pms(sensor):
         try:
             return sensor.read()
         except:
+            # my PM sensor sometimes performs a bad read - without catching, it hangs the program
+            # catching a concrete exception fails, therefore counting it for reference only
             pms_exception_caught_times += 1
             time.sleep(0.5)
             pass
@@ -512,6 +519,8 @@ def read_sensor_bme(sensor):
         try:
             return sensor.read()
         except:
+            # my BME sensor sometimes performs a bad read - without catching, it hangs the program
+            # catching a concrete exception does not work, therefore only counting it
             bme_exception_caught_times += 1
             time.sleep(0.5)
             pass
@@ -524,23 +533,25 @@ def read_sensor_bme(sensor):
 # sensors reading frequency in seconds
 # value > 0s, for example 10, 2 or 0.5
 SENSORS_READING_FREQUENCY = 5
+# in practice there is a delay with posting to sensor.community
+# so every read is done around 10-13s
 
 # 1 is the brightest and energy consuming
 # 0.5 is not very visible during a bright day
-BRIGHTNESS = 0.8
+BRIGHTNESS = 0.9
 
 # change this to adjust pressure based on your altitude
 # 117 for Wrocław, Poland
 ALTITUDE = 117
 
 # change this to adjust temperature compensation
-TEMPERATURE_OFFSET = 3
+TEMPERATURE_OFFSET = 7
 
 # light the LED red if the gas reading is less than 50%
 GAS_ALERT = 0.5
 
 # screen-saving mode, with screen turning on and off to save battery
-SCREEN_MODE_SAVING = "saving"
+SCREEN_MODE_SAVE_POWER = "saving"
 # on to have it lit all the time
 SCREEN_MODE_ON = "on"
 # screen off all the time to save battery
@@ -552,7 +563,8 @@ PM_PX_SIZE = 2 # change to 2 for narrower but bolder graph
 MIC_BANDWIDTH = 2000
 MIC_SAMPLE_N = 240
 
-#where to save sensor data
+# where to save sensor data
+SAVE_READINGS_TO_FILE = False
 FILE_NAME = "sensors.txt"
 COLUMN_NAMES = "date;time;temp °C;humidity %;pressure hPA;lux;average mic;pm1;pm2.5;pm10;gas;"
 
@@ -569,10 +581,11 @@ pms_exception_caught_times = 0
 bme_exception_caught_times = 0
 
 
-screen_mode = SCREEN_MODE_SAVING
+screen_mode = SCREEN_MODE_SAVE_POWER
 
 # set up the display
-display = PicoGraphics(display=DISPLAY_ENVIRO_PLUS, rotate=90)
+# rotate it to achieve portrait, landscape or other
+display = PicoGraphics(display=DISPLAY_ENVIRO_PLUS, rotate=270)
 
 # some colors we'll use for drawing
 BLACK = display.create_pen(0, 0, 0)
@@ -678,17 +691,17 @@ display.set_font("bitmap8")
 led_yellow()
 screen_on()
 
-status_to_display = "{}\n" \
+status_to_display_on_screen = "{}\n" \
                     "serial number:\n" \
                     "{}\n" \
                     "\n" \
                     "WAITING FOR SENSORS".format(describe_wifi_status(), get_serial_number())
-display_fullscreen(status_to_display, 3);
+display_fullscreen(status_to_display_on_screen, 3)
 
 
 # the gas sensor gives a few weird readings to start, lets discard them
 for _ in range(4): # 2 is enough, this is just to have more status display
-    temperature, pressure, humidity, gas, status, _, _ = read_sensor_bme(bme)
+    temperature, pressure_pa, humidity, gas, bme_status, _, _ = read_sensor_bme(bme)
     read_sensor_pms(pms5003)
     time.sleep(1)
 
@@ -710,8 +723,8 @@ while True:
 
 
     # read BME688
-    temperature, pressure, humidity, gas, status, _, _ = read_sensor_bme(bme)
-    heater = "Stable" if status & STATUS_HEATER_STABLE else "Unstable"
+    temperature, pressure_pa, humidity, gas, bme_status, _, _ = read_sensor_bme(bme)
+    heater = "Stable" if bme_status & STATUS_HEATER_STABLE else "Unstable"
 
     # correct temperature and humidity using an offset
     corrected_temperature = temperature - TEMPERATURE_OFFSET
@@ -731,7 +744,7 @@ while True:
         min_gas = gas
 
     # convert pressure into hpa
-    pressure_hpa = pressure / 100
+    pressure_hpa = pressure_pa / 100
 
     # correct pressure
     pressure_hpa = adjust_to_sea_pressure(pressure_hpa, corrected_temperature, ALTITUDE)
@@ -744,7 +757,6 @@ while True:
 
 
     # read particulate sensor and put the results into an array
-    # comment out if no PM sensor
     data = read_sensor_pms(pms5003)
     results_particulates.append(data)
     if (len(results_particulates) > SCREEN_WIDTH / PM_PX_SIZE):  # scroll the result list by removing the first value
@@ -757,8 +769,7 @@ while True:
         display.set_pen(BLACK)
         display.clear()
 
-        # draw on bottom of screen the particulate graph on screen
-        # comment out if no PM sensor
+        # draw on bottom the particulate graph on screen
         draw_pm_hist(results_particulates)
 
         # draw the top box
@@ -824,8 +835,8 @@ while True:
         # send results to sensor.community
         send_reading_to_sensor_community()
 
-        # save to file - not needed when sending to sensor.community
-        # save_reading_to_file()
+        # save to file - if SAVE_READINGS_TO_FILE is True
+        save_reading_to_file()
 
         # wait for next reading
         sleep_until_next_reading()

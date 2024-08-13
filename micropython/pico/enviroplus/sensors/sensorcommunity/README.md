@@ -1,13 +1,23 @@
-This code is for equipment combo Pico W / Enviro+ / PMS5003, and it sends data 
+This code is for equipment combo Pico **W** / Enviro+ / PMS5003, and it sends data 
 to https://sensor.community.
 
-It works great for reading **PM** data. It also reads **temp in Celsius** (very well), 
-**light**, **humidity** (very well), **noise** (not so well), **pressure** (very well).
+It reads: 
+- **PM** data (very well), 
+- **temp in Celsius** (very well), 
+- **light** (very well), 
+- **humidity** (very well), 
+- **noise** (not so well), 
+- **pressure** (very well),
+- **gas** (not sure).
 
-Gas I didn't figure out yet. It does not read (it seems) when harsh
+Gas sensor I didn't figure out yet what it reads. It does not read (it seems) when harsh
 chemicals are felt in the air. Maybe it is not VOC gas.
 
 To save data locally, without wifi, read [sensors data saving](../savetofile/README.md).
+
+Setup
+-----
+Read contents of [main.py](main.py) for setup and explanations.
 
 ----
 
@@ -19,7 +29,8 @@ This is what it shows on screen:
 
 ![cigarette smoke](../../doc/cigarette%20smoke.jpeg)
 
+Logging looks like so: 
+![logging](./doc/logging.png)
 
-Setup
------
-Read contents of [main.py](main.py) for setup and explanations.
+
+

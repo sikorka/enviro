@@ -578,6 +578,7 @@ bme_exception_caught_times = 0
 screen_mode = SCREEN_MODE_SAVE_POWER
 
 # set up the display
+# rotate it to achieve portrait, landscape or other
 display = PicoGraphics(display=DISPLAY_ENVIRO_PLUS, rotate=270)
 
 # some colors we'll use for drawing

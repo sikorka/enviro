@@ -15,6 +15,10 @@ chemicals are felt in the air. Maybe it is not VOC gas.
 
 To save data locally, without wifi, read [sensors data saving](../savetofile/README.md).
 
+Setup
+-----
+Read contents of [main.py](main.py) for setup and explanations.
+
 ----
 
 Below in the graph and chart you can see, that from a safe level (low/green), 
@@ -25,7 +29,8 @@ This is what it shows on screen:
 
 ![cigarette smoke](../../doc/cigarette%20smoke.jpeg)
 
+Logging looks like so: 
+![logging](./doc/logging.png)
 
-Setup
------
-Read contents of [main.py](main.py) for setup and explanations.
+
+

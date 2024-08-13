@@ -96,7 +96,7 @@ def draw_gas_bar(gas, min_gas, max_gas):
 
 def sleep_until_next_reading():
     if screen_mode == SCREEN_MODE_SAVE_POWER and SENSORS_READING_FREQUENCY >= 2:
-        print("turning off screen to save battery")
+        print("turning off screen to save battery\n")
         time.sleep(2) # show the results for a moment if saving mode turned on
         screen_off() # turn off screen to save battery
         time.sleep(SENSORS_READING_FREQUENCY-2) # wait the remaining seconds
@@ -138,6 +138,7 @@ def connect_to_wifi():
 
         display_fullscreen("{}\n{}\n{}\n".format(describe_wifi_status(), wlan.isconnected(), wlan.ifconfig()), 3);
 
+        # retry every few seconds
         time.sleep(3)
 
         wlan.connect(secrets.SSID, secrets.PASSWORD)
@@ -150,12 +151,15 @@ def disconnect_from_wifi():
 
         display_fullscreen(f"{describe_wifi_status()}\n", 3);
 
+        # retry every few seconds
         time.sleep(1)
+        
         wlan.disconnect()
 
     print_wifi_status()
 
 
+# display text in full screen mode on Pico 
 def display_fullscreen(string, size):
     display.set_pen(BLACK)
     display.clear()
@@ -279,19 +283,21 @@ def print_response(res):
         print("Response is None")
 
 def print_reading():
+    print("\n")
     print(f"{sensor_reading_date_time}")
-    print(f"tem {corrected_temperature:.1f} °C")
-    print(f"hum {corrected_humidity:.0f}")
-    print(f"hPa {pressure_hpa:.0f}")
-    print(f"lux {lux:.0f}")
-    print(f"mic {mic_average_result:.1f}")
+    print(f"temp  {corrected_temperature:.1f} °C")
+    print(f"humid {corrected_humidity:.0f}")
+    print(f"hPa   {pressure_hpa:.0f}")
+    print(f"lux   {lux:.0f}")
+    print(f"mic   {mic_average_result:.1f}")
     print(f"pm1   {data.pm_ug_per_m3(1.0):.0f}")
     print(f"pm2.5 {data.pm_ug_per_m3(2.5):.0f}")
     print(f"pm10  {data.pm_ug_per_m3(10):.0f}")
-    print(f"gas {gas:.0f}\n")
+    print(f"gas   {gas:.0f}")
     print("\n")
-    print(f"BME sensor exceptions {bme_exception_caught_times}\n")
-    print(f"PMS sensor exceptions {pms_exception_caught_times}\n")
+    print(f"BME sensor exceptions {bme_exception_caught_times}")
+    print(f"PMS sensor exceptions {pms_exception_caught_times}")
+    print("\n")
 
 def save_header_to_file():
     if (SAVE_READINGS_TO_FILE):
@@ -539,7 +545,7 @@ BRIGHTNESS = 0.9
 ALTITUDE = 117
 
 # change this to adjust temperature compensation
-TEMPERATURE_OFFSET = 3
+TEMPERATURE_OFFSET = 7
 
 # light the LED red if the gas reading is less than 50%
 GAS_ALERT = 0.5

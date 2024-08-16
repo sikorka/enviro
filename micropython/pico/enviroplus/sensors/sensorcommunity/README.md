@@ -28,9 +28,11 @@ This is what it shows on screen:
 ![cigarette smoke](../../doc/cigarette%20smoke.jpeg) 
 
 This is how [sensor.community](https://sensor.community) Grafana charts look, in moving 24h graph - you can see how often smoke fills the room (every spike), and how high the ppm levels are (max >900ppm - measurements on the left): 
-![graphs](doc/sensor.community grafana charts.png) 
+
+![graphs](./doc/sensor.community grafana charts.png) 
 
 Logging looks like so: 
+
 ![logging](./doc/logging.png) 
 
 

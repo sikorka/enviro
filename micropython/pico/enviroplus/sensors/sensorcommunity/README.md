@@ -27,7 +27,7 @@ This is what it shows on screen:
 
 ![cigarette smoke](../../doc/cigarette%20smoke.jpeg) 
 
-This is how [sensor.community](https://sensor.community) Grafana charts look, in moving 24h graph - you can see how often smoke fills the room (every spike), and how high the ppm levels are (max >900ppm - measurements on the left): 
+This is how [sensor.community](https://sensor.community) Grafana charts look, in moving 24h graph. You can see how often smoke fills the room (every spike), and how high the ppm levels are (max >900ppm - measurements on the left). Also when smokers are sleeping, and that they go for a smoke in middle of the night (3AM) but sleep until 10AM. 
 
 ![graphs](./doc/sensor.community%20grafana%20charts.png) 
 

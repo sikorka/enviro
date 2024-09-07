@@ -200,6 +200,7 @@ def send_reading_to_sensor_community():
     pm_values = {}
     pm_values["P2"] = f"{data.pm_ug_per_m3(2.5):.0f}"
     pm_values["P1"] = f"{data.pm_ug_per_m3(10):.0f}"
+    pm_values["P0"] = f"{data.pm_ug_per_m3(1.0):.0f}"
 
     pm_values_json = [{"value_type": key, "value": val} for key, val in pm_values.items()]
 
@@ -222,7 +223,7 @@ def send_reading_to_sensor_community():
         print(payload)
         print(headers)
 
-        resppm = requests.post(url, data=(json.dumps(payload)).encode(), headers=headers)
+        resppm = requests.post(url, data=(json.dumps(payload)).encode(), headers=headers, timeout=30)
 
         print_response(resppm)
     except Exception as e:
@@ -258,7 +259,7 @@ def send_reading_to_sensor_community():
         print(payload)
         print(headers)
 
-        respbm = requests.post(url, data=(json.dumps(payload)).encode(), headers=headers)
+        respbm = requests.post(url, data=(json.dumps(payload)).encode(), headers=headers, timeout=30)
 
         print_response(respbm)
     except Exception as e:
@@ -538,7 +539,7 @@ SENSORS_READING_FREQUENCY = 5
 
 # 1 is the brightest and energy consuming
 # 0.5 is not very visible during a bright day
-BRIGHTNESS = 0.9
+BRIGHTNESS = 0.5
 
 # change this to adjust pressure based on your altitude
 # 117 for Wrocław, Poland

@@ -14,23 +14,44 @@ import urequests as requests
 import json
 
 """
-This example reads from all the sensors on Enviro+ and the PMS5003
-particulate sensor and mic. Displays the results on screen. Sends them
-to sensor.community. 
+
+BUTTONS:
 
 Press B to turn the screen off.
 Press A to turn the screen on for 2s every reading.
 Press Y to have the screen always on (battery draining).
 
 
-SETUP:
+WHAT THIS DOES:
 
-Go through this https://learn.pimoroni.com/article/getting-started-with-pico#installing-the-custom-firmware 
-paragraph. On the Releases page > under Assets, choose a stable `*.uf2` file with 
-*enviro* word in the name. Mine is `enviro-v1.23.0-1-pimoroni-micropython.uf2` and you can find it
-under `/lib` directory.
+This example reads from all the sensors on Enviro+ and the PMS5003
+particulate sensor and mic. Displays the results on screen. Sends them
+to sensor.community.
 
-Remember to save to your Pico (for example in Thonny MicroPython editor):
+
+
+PUT IT TOGETHER AND RUN:
+
+0. BUY: 
+
+Pico WH 
+https://shop.pimoroni.com/products/raspberry-pi-pico-w?variant=40059369652307
+
+Enviro+ 
+https://shop.pimoroni.com/products/pico-enviro-pack?variant=40045073662035
+
+PMS5003
+https://shop.pimoroni.com/products/pms5003-particulate-matter-sensor-with-cable?variant=29075640352851
+
+
+1. SETUP:
+
+Go through this https://learn.pimoroni.com/article/getting-started-with-pico#installing-the-custom-firmware paragraph.
+
+On the Releases page > under Assets, choose a stable `*.uf2` file with *enviro* word in the name. 
+Mine is `enviro-v1.23.0-1-pimoroni-micropython.uf2` (you can find it under `/lib` directory in this repo too).
+
+Save to your Pico (for example in Thonny MicroPython editor):
 - `pms5003.py` file - which is PMS5003 library code from
 https://github.com/pimoroni/pms5003-micropython/blob/main/pms5003/__init__.py, 
 - as well as this file as `main.py`,
@@ -40,11 +61,13 @@ Once `secrets.py` is on your Pico, fill it with valid data. To find out your
 Pico's serial number go through 
 https://github.com/sikorka/enviro/tree/main/c/pico/pico-test/serialnumber.
 
+Register your device in sensor.community with the Pico serial number.
 
-RUN: 
 
-Disconnect Pico from power and connect it again. Now the program `main.py` will be 
-running and restarting smoothly everytime Pico restarts. You are done! 
+2. RUN: 
+
+Disconnect Pico from power and connect it again (so called hard reset - which is safe to do with Pico!). 
+Now the program `main.py` will be running and restarting smoothly everytime Pico restarts. You are done! 
 
 """
 
@@ -56,6 +79,13 @@ running and restarting smoothly everytime Pico restarts. You are done!
 
 
 def screen_on():
+    if lux < 100:
+        BRIGHTNESS = 0.5
+    elif 100 <= lux < 500:
+        BRIGHTNESS = 0.7
+    else:
+        BRIGHTNESS = 0.9
+    
     display.set_backlight(BRIGHTNESS)
 
 def screen_off():
@@ -671,6 +701,9 @@ min_temperature = 100.0
 max_temperature = 0.0
 min_gas = 100000.0
 max_gas = 0.0
+
+# define lux variable
+lux = 0
 
 
 #prepare sensor readings file to write to it

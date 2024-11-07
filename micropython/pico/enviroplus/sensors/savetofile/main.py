@@ -11,12 +11,18 @@ from pms5003 import PMS5003
 
 
 """
-This example reads from all the sensors on Enviro+ and the PMS5003
-particulate sensor and mic. Displays the results on screen. Saves them to file.
 
+BUTTONS:
+
+Press Y to have the screen always on (battery draining).
 Press B to turn the backlight off.
 Press A to turn the backlight on for 2s every reading.
-Press Y to have the screen always on (battery draining).
+
+
+WHAT THIS DOES:
+
+This example reads from all the sensors on Enviro+ and the PMS5003
+particulate sensor and mic. Displays the results on screen. Saves them to file.
 
 Saves each sensor data read, to file on Pico:
 24.05.29 14:02:53;55;999;12;10.5;9;13;13;12345; 
@@ -29,21 +35,38 @@ elsewhere. Pico has only 2MB memory (new Pico 2 has 4MB) but it saves
 max 809KB data. So in practice save your data every 24h. 
 
 
-SETUP:
+PUT IT TOGETHER AND RUN:
 
-Go through this https://learn.pimoroni.com/article/getting-started-with-pico#installing-the-custom-firmware 
+0. BUY: 
 
-On the Releases page > under Assets, choose a stable *.uf2 file with 
-*enviro* in the name. Mine is `enviro-v1.23.0-1-pimoroni-micropython.uf2`. 
+Pico WH 
+https://shop.pimoroni.com/products/raspberry-pi-pico-w?variant=40059369652307
 
-Remember to save PMS5003 library code from
-https://github.com/pimoroni/pms5003-micropython/blob/main/pms5003/__init__.py
-as `pms5003.py` on your Pico. 
+Enviro+ 
+https://shop.pimoroni.com/products/pico-enviro-pack?variant=40045073662035
 
-RUN: 
+PMS5003
+https://shop.pimoroni.com/products/pms5003-particulate-matter-sensor-with-cable?variant=29075640352851
 
-After setup, save this file on Pico as `main.py`. Disconnect Pico from power and connect it again. 
-Now the program will be running and restarting smoothly everytime Pico restarts. You are done! 
+
+1. SETUP:
+
+Go through this https://learn.pimoroni.com/article/getting-started-with-pico#installing-the-custom-firmware paragraph.
+
+On the Releases page > under Assets, choose a stable `*.uf2` file with *enviro* word in the name. 
+Mine is `enviro-v1.23.0-1-pimoroni-micropython.uf2` (you can find it under `/lib` directory in this repo too).
+
+Save to your Pico (for example in Thonny MicroPython editor):
+- `pms5003.py` file - which is PMS5003 library code from
+https://github.com/pimoroni/pms5003-micropython/blob/main/pms5003/__init__.py, 
+- as well as this file as `main.py`.
+
+
+2. RUN: 
+
+Disconnect Pico from power and connect it again (so called hard reset - which is safe to do with Pico!). 
+Now the program `main.py` will be running and restarting smoothly everytime Pico restarts. You are done! 
+
 
 """
 
@@ -93,7 +116,7 @@ def draw_gas_bar(gas, min_gas, max_gas):
 
 
 def sleep_until_next_reading():
-    if screen_mode == SCREEN_MODE_SAVING and SENSORS_READING_FREQUENCY >= 2:
+    if screen_mode == SCREEN_MODE_SAVE_POWER and SENSORS_READING_FREQUENCY >= 2:
         print("turning off screen to save battery")
         time.sleep(2) # show the results for a moment if saving mode turned on
         screen_off() # turn off screen to save battery
@@ -110,19 +133,16 @@ def establish_screen_mode():
     if button_a.is_pressed:
         screen_mode = SCREEN_MODE_ON
     elif button_b.is_pressed:
-        screen_mode = SCREEN_MODE_SAVING
+        screen_mode = SCREEN_MODE_SAVE_POWER
     elif button_y.is_pressed:
         screen_mode = SCREEN_MODE_OFF
 
-    if screen_mode == SCREEN_MODE_SAVING or screen_mode == SCREEN_MODE_ON:
+    if screen_mode == SCREEN_MODE_SAVE_POWER or screen_mode == SCREEN_MODE_ON:
         screen_on()
         time.sleep(0.2)
     elif screen_mode == SCREEN_MODE_OFF:
         screen_off()
         time.sleep(0.2)
-
-def send_to_sensor_community():
-    
 
 def print_to_shell():
     print(f"{sensor_reading_date_time}")
@@ -377,7 +397,7 @@ TEMPERATURE_OFFSET = 3
 GAS_ALERT = 0.5
 
 # screen-saving mode, with screen turning on and off to save battery
-SCREEN_MODE_SAVING = "saving"
+SCREEN_MODE_SAVE_POWER = "save power"
 # on to have it lit all the time
 SCREEN_MODE_ON = "on"
 # screen off all the time to save battery
@@ -403,7 +423,7 @@ bme_exception_caught_times = 0
 
 
 
-screen_mode = SCREEN_MODE_SAVING
+screen_mode = SCREEN_MODE_SAVE_POWER
 
 # set up the display
 display = PicoGraphics(display=DISPLAY_ENVIRO_PLUS, rotate=90)
@@ -635,9 +655,6 @@ while True:
 
         # print to shell
         print_to_shell()
-        
-        # send results to sensor.community
-        send_to_sensor_community()
 
         # draw bar for gas
         draw_gas_bar(gas, min_gas, max_gas)

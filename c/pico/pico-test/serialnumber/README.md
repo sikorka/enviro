@@ -35,7 +35,6 @@ You can alternatively connect to Pico (to see the log) using screen emulator (`s
 
 ![minicom serial display](./doc/minicom%20serial.png)
 
-
 USB problems
 ------------
 

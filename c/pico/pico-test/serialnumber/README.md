@@ -16,7 +16,7 @@ For using various C libraries for Pico, use this reference guide https://datashe
 Run
 ---
 
-To run the code clone this repo > open folder [serialnumber](./) in VS Code > in bottom right corner press **Run**.
+If you want to get serial number in your code (not one-time) this code will be useful. To run it clone this repo > open folder [serialnumber](./) in VS Code > in bottom right corner press **Run**.
 
 Open Thonny > remove and insert Pico once again into your computer's USB > observe the log in Thonny.
 

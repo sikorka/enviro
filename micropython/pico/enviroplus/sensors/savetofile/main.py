@@ -15,8 +15,8 @@ from pms5003 import PMS5003
 BUTTONS:
 
 Press Y to have the screen always on (battery draining).
-Press B to turn the backlight off.
-Press A to turn the backlight on for 2s every reading.
+Press B to turn the screen off.
+Press A to turn the screen on for 2s every reading.
 
 
 WHAT THIS DOES:

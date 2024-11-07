@@ -33,7 +33,7 @@ You can alternatively connect to Pico (to see the log) using screen emulator (`s
     
     minicom -D /dev/cu.usbmodem14301
 
-![minicom serial display](./doc/minicom%20serial%20display.png)
+![minicom serial display](./doc/minicom%20serial.png)
 
 
 USB problems
